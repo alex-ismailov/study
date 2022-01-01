@@ -3,15 +3,15 @@ module Exercise
     class << self
       def replace(array)
         new_array = []
-        get_max = lambda { |collection|
+        get_max = lambda {
           max_num = 0
-          collection.each do |number|
+          array.each do |number|
             max_num = number if number > max_num
           end
           max_num
         }
 
-        max_num = get_max.call(array)
+        max_num = get_max.call
         array.each do |number|
           new_array << if number >= 0
                          max_num
