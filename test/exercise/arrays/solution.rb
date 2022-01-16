@@ -2,25 +2,8 @@ module Exercise
   module Arrays
     class << self
       def replace(array)
-        new_array = []
-        get_max = lambda {
-          max_num = 0
-          array.each do |number|
-            max_num = number if number > max_num
-          end
-          max_num
-        }
-
-        max_num = get_max.call
-        array.each do |number|
-          new_array << if number >= 0
-                         max_num
-                       else
-                         number
-                       end
-        end
-
-        new_array
+        max_number = array.reduce { |acc, number| number > acc ? number : acc }
+        array.map { |number| number.negative? ? number : max_number }
       end
 
       def search(array, query)
