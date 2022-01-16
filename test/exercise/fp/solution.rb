@@ -1,22 +1,14 @@
 module Exercise
   module Fp
     class << self
-      # Обратиться к параметрам фильма можно так:
-      # film["name"], film["rating_kinopoisk"], film["rating_imdb"],
-      # film["genres"], film["year"], film["access_level"], film["country"]
       def rating(array)
-        all_ratings = array.map do |film|
-          if film['country'].blank? || film['country'].split(',').length < 2 || film['rating_kinopoisk'].to_f.zero?
-            nil
-          else
-            film['rating_kinopoisk'].to_f
-          end
+        compacted_films = array.select { |film| !film['country'].blank? }       
+        filtered_films = compacted_films.select do |film|
+          film['rating_kinopoisk'].to_f > 0 && film['country'].split(',').length >= 2
         end
-
-        filtered_ratings = all_ratings.compact
-        sum = filtered_ratings.reduce(0.0) { |acc, n| acc + n }
-
-        sum / filtered_ratings.length
+        sum = filtered_films.reduce(0.0) { |acc, film| acc + film['rating_kinopoisk'].to_f }
+        
+        sum / filtered_films.length
       end
 
       def chars_count(films, threshold)
