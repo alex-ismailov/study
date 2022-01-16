@@ -2,12 +2,12 @@ module Exercise
   module Fp
     class << self
       def rating(array)
-        compacted_films = array.select { |film| !film['country'].blank? }       
+        compacted_films = array.reject { |film| film['country'].blank? }
         filtered_films = compacted_films.select do |film|
-          film['rating_kinopoisk'].to_f > 0 && film['country'].split(',').length >= 2
+          film['rating_kinopoisk'].to_f.positive? && film['country'].split(',').length >= 2
         end
         sum = filtered_films.reduce(0.0) { |acc, film| acc + film['rating_kinopoisk'].to_f }
-        
+
         sum / filtered_films.length
       end
 
