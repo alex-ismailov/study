@@ -21,40 +21,6 @@ module Exercise
         self
       end
 
-      # Написать свою функцию my_map
-      def my_map(&blk)
-        iterate = lambda do |acc, collection, &block|
-          return acc if collection.empty?
-
-          first, *rest = collection
-          processed_item = yield first
-          new_acc = [*acc, processed_item]
-
-          iterate.call(new_acc, rest, &block)
-        end
-
-        mapped_collection = iterate.call([], self, &blk)
-
-        MyArray.new(mapped_collection)
-      end
-
-      # Написать свою функцию my_compact
-      def my_compact
-        iterate = lambda do |acc, collection|
-          return acc if collection.empty?
-
-          first, *rest = collection
-          return iterate.call(acc, rest) if first.nil?
-
-          new_acc = [*acc, first]
-          iterate.call(new_acc, rest)
-        end
-
-        compacted_collection = iterate.call([], self)
-
-        MyArray.new(compacted_collection)
-      end
-
       # Написать свою функцию my_reduce
       def my_reduce(initial_value = nil, &blk)
         iterate = lambda do |acc, collection, &block|
@@ -75,6 +41,25 @@ module Exercise
         else
           iterate.call(initial_value, self, &blk)
         end
+      end
+
+      # Написать свою функцию my_map
+      def my_map
+        inner_block = lambda do |acc, el|
+          processed_item = yield el
+          [*acc, processed_item]
+        end
+        MyArray.new(my_reduce([], &inner_block))
+      end
+
+      # Написать свою функцию my_compact
+      def my_compact
+        reduce_nil = lambda do |acc, el|
+          return acc if el.nil?
+
+          [*acc, el]
+        end
+        MyArray.new(my_reduce([], &reduce_nil))
       end
     end
   end
